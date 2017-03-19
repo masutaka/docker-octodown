@@ -1,0 +1,24 @@
+#!/bin/sh -eu
+
+if ! type docker > /dev/null; then
+  echo "Could not find Docker. Please install Docker first." >&2
+  exit 1
+fi
+
+ARGS=$@
+LAST_ARG=${@:$#:1}
+
+IMAGE=masutaka/octodown
+
+if echo $LAST_ARG | grep -q -- '^-'; then
+  docker run --rm $IMAGE $ARGS
+else
+  TARGET_PATH=$LAST_ARG
+  TARGET_FILE=$(basename $TARGET_PATH)
+  ABS_PATH=$(cd $(dirname $TARGET_PATH) && pwd)/$TARGET_FILE
+  MOUNT_OPTION="-v $ABS_PATH:/$TARGET_FILE"
+
+  OUTPUT_HTML=/tmp/octodown.html
+  docker run --rm $MOUNT_OPTION $IMAGE -r $ARGS > $OUTPUT_HTML
+  launchy $OUTPUT_HTML
+fi
