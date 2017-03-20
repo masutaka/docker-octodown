@@ -48,11 +48,11 @@ if [ -n "$TARGET_PATH" ]; then
   OUTPUT_HTML=/tmp/octodown.html
 
   if [ "$RAW" = yes ]; then
-    docker run --rm $MOUNT_OPTION $IMAGE $OCTODOWN_ARGS /$TARGET_PATH
+    docker run --rm $MOUNT_OPTION $IMAGE $OCTODOWN_ARGS /$TARGET_FILE
   elif [ "$LIVE_RELOAD" = yes ]; then
-    docker run --rm $MOUNT_OPTION -p $PORT:$PORT $IMAGE $OCTODOWN_ARGS /$TARGET_PATH
+    docker run --rm $MOUNT_OPTION -p $PORT:$PORT $IMAGE $OCTODOWN_ARGS /$TARGET_FILE
   else
-    docker run --rm $MOUNT_OPTION $IMAGE -r $OCTODOWN_ARGS /$TARGET_PATH > $OUTPUT_HTML
+    docker run --rm $MOUNT_OPTION $IMAGE -r $OCTODOWN_ARGS /$TARGET_FILE > $OUTPUT_HTML
     launchy $OUTPUT_HTML
   fi
 else
