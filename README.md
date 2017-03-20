@@ -1,5 +1,13 @@
 # docker-octodown
 
+[![Docker Stars](https://img.shields.io/docker/stars/masutaka/octodown.svg?style=flat-square)][dockerhub]
+[![Docker Pulls](https://img.shields.io/docker/pulls/masutaka/octodown.svg?style=flat-square)][dockerhub]
+[![Docker Automated buil](https://img.shields.io/docker/automated/masutaka/octodown.svg?style=flat-square)][dockerhub]
+[![License](https://img.shields.io/github/license/masutaka/docker-octodown.svg?style=flat-square)][license]
+
+[dockerhub]: https://hub.docker.com/r/masutaka/octodown/
+[license]: https://github.com/masutaka/docker-octodown/blob/master/LICENSE.txt
+
 Dockerized [octodown](https://rubygems.org/gems/octodown)
 
 ## Installation
@@ -9,10 +17,6 @@ Dockerized [octodown](https://rubygems.org/gems/octodown)
     $ curl -LO https://raw.githubusercontent.com/masutaka/docker-octodown/master/bin/octodown
     $ chmod +x octodown
     $ export PATH=$HOME/bin:$PATH
-
-[Whalebrew](https://github.com/bfirsh/whalebrew) gives an easy installation to you.
-
-    $ whalebrew install masutaka/octodown
 
 ## Usage
 
