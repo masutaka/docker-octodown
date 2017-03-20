@@ -1,25 +1,60 @@
 #!/bin/sh -eu
 
-if ! type docker > /dev/null; then
-  echo "Could not find Docker. Please install Docker first." >&2
-  exit 1
-fi
-
-ARGS=$@
-LAST_ARG=${@:$#:1}
+type docker > /dev/null
 
 IMAGE=masutaka/octodown
 
-if echo $LAST_ARG | grep -q -- '^-'; then
-  docker run --rm $IMAGE $ARGS
-else
-  TARGET_PATH=$LAST_ARG
+OCTODOWN_ARGS=""
+RAW=""
+LIVE_RELOAD=""
+PORT=8080
+TARGET_PATH=""
+
+while [ $# != 0 ]; do
+  case $1 in
+    -s|--style)
+      OCTODOWN_ARGS="$OCTODOWN_ARGS $1 $2"
+      shift
+      ;;
+    -r|--raw)
+      RAW=yes
+      OCTODOWN_ARGS="$OCTODOWN_ARGS $1"
+      ;;
+    -l|--live-reload)
+      echo "Sorry, docker-octodown doesn't support the option (-l,--live-reload)."; exit 1
+      LIVE_RELOAD=yes
+      OCTODOWN_ARGS="$OCTODOWN_ARGS $1"
+      ;;
+    -P|--port)
+      echo "Sorry, docker-octodown doesn't support the option (-P|--port)."; exit 2
+      OCTODOWN_ARGS="$OCTODOWN_ARGS $1 $2"
+      PORT=$2
+      shift
+      ;;
+    -*)
+      OCTODOWN_ARGS="$OCTODOWN_ARGS $1"
+      ;;
+    *)
+      TARGET_PATH=$1
+      ;;
+  esac
+  shift
+done
+
+if [ -n "$TARGET_PATH" ]; then
   TARGET_FILE=$(basename $TARGET_PATH)
   ABS_PATH=$(cd $(dirname $TARGET_PATH) && pwd)/$TARGET_FILE
   MOUNT_OPTION="-v $ABS_PATH:/$TARGET_FILE"
-  OCTODOWN_ARGS="$(echo $ARGS | awk '{$NF="";print $0}') $TARGET_FILE"
-
   OUTPUT_HTML=/tmp/octodown.html
-  docker run --rm $MOUNT_OPTION $IMAGE -r $OCTODOWN_ARGS > $OUTPUT_HTML
-  launchy $OUTPUT_HTML
+
+  if [ "$RAW" = yes ]; then
+    docker run --rm $MOUNT_OPTION $IMAGE $OCTODOWN_ARGS /$TARGET_PATH
+  elif [ "$LIVE_RELOAD" = yes ]; then
+    docker run --rm $MOUNT_OPTION -p $PORT:$PORT $IMAGE $OCTODOWN_ARGS /$TARGET_PATH
+  else
+    docker run --rm $MOUNT_OPTION $IMAGE -r $OCTODOWN_ARGS /$TARGET_PATH > $OUTPUT_HTML
+    launchy $OUTPUT_HTML
+  fi
+else
+  docker run --rm $IMAGE $OCTODOWN_ARGS
 fi
