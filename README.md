@@ -10,6 +10,8 @@
 
 Dockerized [octodown](https://rubygems.org/gems/octodown)
 
+:warning: This dockerize has been incomplete yet for needing [`launchy`](https://rubygems.org/gems/launchy).
+
 ## Installation
 
     $ docker pull masutaka/octodown
@@ -26,7 +28,7 @@ See https://github.com/ianks/octodown
 
 The following features are not supported for the docker limitation.
 
-* :-1: LiveReload
+* LiveReload
     * I exported [`$TEST`](https://github.com/ianks/octodown/blob/v1.4.2/lib/octodown/renderer/server.rb#L41) in Docker container. But...
-* :-1: STDIN
+* STDIN
     * I might be able to support it.
