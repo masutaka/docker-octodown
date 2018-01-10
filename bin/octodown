@@ -53,7 +53,7 @@ if [ -n "$TARGET_PATH" ]; then
     docker run --rm $MOUNT_OPTION -p $PORT:$PORT $IMAGE $OCTODOWN_ARGS /$TARGET_FILE
   else
     docker run --rm $MOUNT_OPTION $IMAGE -r $OCTODOWN_ARGS /$TARGET_FILE > $OUTPUT_HTML
-    launchy $OUTPUT_HTML
+    open $OUTPUT_HTML
   fi
 else
   docker run --rm $IMAGE $OCTODOWN_ARGS
